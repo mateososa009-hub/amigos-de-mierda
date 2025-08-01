@@ -13,21 +13,14 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      height: 100vh;
-      text-align: center;
-      padding: 1rem;
+      padding: 2rem;
     }
-    input, button {
+    input, button, select {
       padding: 0.6rem;
       margin: 0.5rem;
       border: none;
       border-radius: 8px;
       font-size: 1rem;
-    }
-    input {
-      width: 90%;
-      max-width: 400px;
     }
     button {
       background: red;
@@ -40,6 +33,13 @@
       border-radius: 16px;
       margin: 1rem 0;
       max-width: 500px;
+      text-align: center;
+    }
+    .scoreboard {
+      margin-top: 1rem;
+    }
+    .hidden {
+      display: none;
     }
   </style>
 </head>
@@ -52,13 +52,17 @@
     <button onclick="startGame()">Empezar</button>
   </div>
 
-  <div id="game" style="display: none;">
+  <div id="game" class="hidden">
     <div class="card" id="cardText">Presioná el botón para sacar una carta</div>
-    <button onclick="drawCard()">Sacar carta</button>
+    <select id="playerSelect"></select>
+    <button onclick="assignCard()">Asignar carta</button>
+    <button onclick="drawCard()">Sacar nueva carta</button>
+    <button onclick="endGame()">Terminar juego</button>
+    <div class="scoreboard" id="scoreboard"></div>
   </div>
 
   <script>
-    const cards = [
+    const allCards = [
       "El que más chances tiene de cagarle el plan a todos.",
       "El que peor contesta los mensajes.",
       "El que más se hace el profundo por Instagram.",
@@ -73,8 +77,10 @@
       "Mostrá tu historial de navegación del día.",
       "Subí una historia diciendo 'Los extraño a todos menos a vos' sin aclarar a quién."
     ];
-
+    let cards = [];
     let names = [];
+    let scores = {};
+    let currentCard = "";
 
     function startGame() {
       const input = document.getElementById("namesInput").value;
@@ -83,17 +89,53 @@
         alert("Poné al menos 3 nombres");
         return;
       }
-      document.getElementById("setup").style.display = "none";
-      document.getElementById("game").style.display = "block";
+      names.forEach(name => scores[name] = []);
+      cards = [...allCards];
+      populatePlayers();
+      document.getElementById("setup").classList.add("hidden");
+      document.getElementById("game").classList.remove("hidden");
+      drawCard();
+    }
+
+    function populatePlayers() {
+      const select = document.getElementById("playerSelect");
+      select.innerHTML = "";
+      names.forEach(name => {
+        const option = document.createElement("option");
+        option.value = name;
+        option.textContent = name;
+        select.appendChild(option);
+      });
     }
 
     function drawCard() {
-      const card = cards[Math.floor(Math.random() * cards.length)];
-      const result = card
+      if (cards.length === 0) {
+        alert("Ya no quedan más cartas. Podés terminar el juego.");
+        return;
+      }
+      const index = Math.floor(Math.random() * cards.length);
+      currentCard = cards.splice(index, 1)[0];
+      const text = currentCard
         .replaceAll("{name1}", names[0])
         .replaceAll("{name2}", names[1])
         .replaceAll("{name3}", names[2]);
-      document.getElementById("cardText").innerText = result;
+      document.getElementById("cardText").innerText = text;
+    }
+
+    function assignCard() {
+      const selected = document.getElementById("playerSelect").value;
+      if (!currentCard) return;
+      scores[selected].push(currentCard);
+      drawCard();
+    }
+
+    function endGame() {
+      let result = "<h2>🏁 Resultados:</h2><ul>";
+      Object.keys(scores).forEach(name => {
+        result += `<li><strong>${name}:</strong> ${scores[name].length} cartas</li>`;
+      });
+      result += "</ul>";
+      document.getElementById("scoreboard").innerHTML = result;
     }
   </script>
 </body>
