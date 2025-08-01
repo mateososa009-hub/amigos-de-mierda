@@ -1,0 +1,17 @@
+
+{
+  "name": "Amigos de Mierda",
+  "short_name": "AmigosM",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "description": "Cartas filosas y jodidas para jugar entre amigos.",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}

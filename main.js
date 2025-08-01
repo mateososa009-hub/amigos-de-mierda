@@ -1,0 +1,1 @@
+// React app se genera externamente. Usar bundler (como Vite/Parcel) para compilar.

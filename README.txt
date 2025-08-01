@@ -1,0 +1,1 @@
+Este paquete contiene la estructura básica para una PWA del juego 'Amigos de Mierda'.
