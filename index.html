@@ -1,15 +1,100 @@
 
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Amigos de Mierda</title>
-    <link rel="manifest" href="manifest.json" />
-    <meta name="theme-color" content="#000000" />
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="main.js"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Amigos de Mierda</title>
+  <style>
+    body {
+      background: black;
+      color: white;
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      padding: 1rem;
+    }
+    input, button {
+      padding: 0.6rem;
+      margin: 0.5rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    input {
+      width: 90%;
+      max-width: 400px;
+    }
+    button {
+      background: red;
+      color: white;
+      cursor: pointer;
+    }
+    .card {
+      background: #1e1e1e;
+      padding: 2rem;
+      border-radius: 16px;
+      margin: 1rem 0;
+      max-width: 500px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎲 Amigos de Mierda</h1>
+  <div id="setup">
+    <p>Ingresá 3 o más nombres del grupo, separados por comas:</p>
+    <input id="namesInput" placeholder="Ej: Luli, Juampi, Nico" />
+    <br />
+    <button onclick="startGame()">Empezar</button>
+  </div>
+
+  <div id="game" style="display: none;">
+    <div class="card" id="cardText">Presioná el botón para sacar una carta</div>
+    <button onclick="drawCard()">Sacar carta</button>
+  </div>
+
+  <script>
+    const cards = [
+      "El que más chances tiene de cagarle el plan a todos.",
+      "El que peor contesta los mensajes.",
+      "El que más se hace el profundo por Instagram.",
+      "El que vive hablando de sí mismo.",
+      "El que se cree mejor amigo y nadie lo siente así.",
+      "El que más veces se calentó con alguien del grupo.",
+      "El que más veces se imaginó con {name1}.",
+      "El que más chances tiene de tener un trío con {name2} y {name3}.",
+      "El que más veces se olvidó de pagar algo 'después te paso', como hizo {name1}.",
+      "El que más chances tiene de perder el DNI hoy, tipo {name2}.",
+      "Mandale un '¿pensás en mí a veces?' a alguien que no hablás hace meses.",
+      "Mostrá tu historial de navegación del día.",
+      "Subí una historia diciendo 'Los extraño a todos menos a vos' sin aclarar a quién."
+    ];
+
+    let names = [];
+
+    function startGame() {
+      const input = document.getElementById("namesInput").value;
+      names = input.split(",").map(n => n.trim()).filter(n => n.length > 0);
+      if (names.length < 3) {
+        alert("Poné al menos 3 nombres");
+        return;
+      }
+      document.getElementById("setup").style.display = "none";
+      document.getElementById("game").style.display = "block";
+    }
+
+    function drawCard() {
+      const card = cards[Math.floor(Math.random() * cards.length)];
+      const result = card
+        .replaceAll("{name1}", names[0])
+        .replaceAll("{name2}", names[1])
+        .replaceAll("{name3}", names[2]);
+      document.getElementById("cardText").innerText = result;
+    }
+  </script>
+</body>
 </html>
